@@ -4,12 +4,15 @@ run-name: ${{ github.actor }} triggered CI/CD workflow
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - "**"
+
   pull_request:
-    branches: ["**"]
+    branches:
+      - "**"
 
 jobs:
-  build-and-test:
+  ci:
     name: Build & Test Next.js App
     runs-on: ubuntu-latest
 
@@ -18,24 +21,24 @@ jobs:
         working-directory: ./test-app
 
     steps:
-      - name: 📥 Check out repository code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ⚙️ Set up Node.js 20
+      - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: npm
           cache-dependency-path: test-app/package-lock.json
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: 🔍 Run ESLint check
+      - name: Run ESLint
         run: npm run lint
 
-      - name: 🚀 Build production Next.js app
+      - name: Build Next.js application
         run: npm run build
 
-      - name: ✅ Report CI Status
-        run: echo "🎉 Build and CI validation passed successfully for AnimeVault application!"
+      - name: CI completed
+        run: echo "CI passed successfully."
