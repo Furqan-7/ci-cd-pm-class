@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Components — AI Powered Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family-sans);
+      background: var(--color-bg-base);
+      color: var(--color-text-primary);
+      line-height: var(--line-height-normal);
+    }
+
+    /* ─── Layout ─── */
+    .page-wrap { padding: var(--spacing-8); max-width: 1200px; margin: 0 auto; }
+
+    /* ─── Nav ─── */
+    .ds-nav-top {
+      display: flex; gap: var(--spacing-6);
+      margin-bottom: var(--spacing-10);
+      padding-bottom: var(--spacing-4);
+      border-bottom: 1px solid var(--color-border);
+      flex-wrap: wrap;
+    }
+    .ds-nav-top a {
+      color: var(--color-text-secondary); text-decoration: none;
+      font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+      transition: color var(--transition-fast);
+    }
+    .ds-nav-top a:hover { color: var(--color-accent); }
+
+    /* ─── Section ─── */
+    section { margin-bottom: var(--spacing-16); }
+    .section-title {
+      font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-2); display: flex; align-items: center; gap: var(--spacing-3);
+    }
+    .section-sub { color: var(--color-text-secondary); font-size: var(--font-size-base); margin-bottom: var(--spacing-6); }
+    .section-divider { height: 1px; background: var(--color-border); margin-bottom: var(--spacing-8); }
+    .component-row { display: flex; flex-wrap: wrap; gap: var(--spacing-4); align-items: center; margin-bottom: var(--spacing-6); }
+    .component-label {
+      width: 100%; font-size: var(--font-size-xs); color: var(--color-text-muted);
+      margin-bottom: var(--spacing-2); font-weight: var(--font-weight-medium);
+      text-transform: uppercase; letter-spacing: var(--letter-spacing-wider);
+      display: flex; align-items: center; gap: var(--spacing-2);
+    }
+    .source-tag {
+      font-size: 10px; padding: 2px 8px; border-radius: var(--radius-full);
+      font-weight: var(--font-weight-semibold); text-transform: uppercase;
+    }
+    .source-tag--screenshot { background: rgba(34,197,94,0.15); color: #22C55E; border: 1px solid rgba(34,197,94,0.3); }
+    .source-tag--inferred { background: rgba(234,179,8,0.15); color: #EAB308; border: 1px solid rgba(234,179,8,0.3); }
+
+    /* ══════════════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════════════ */
+    .ds-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-2);
+      border: none; cursor: pointer; font-family: inherit;
+      font-size: var(--font-size-base); font-weight: var(--font-weight-semibold);
+      transition: all var(--transition-base); white-space: nowrap; text-decoration: none;
+    }
+    .ds-button--primary {
+      background: var(--color-accent);
+      color: var(--button-primary-text);
+      padding: 14px 32px;
+      border-radius: var(--radius-full);
+    }
+    .ds-button--primary:hover {
+      background: var(--color-accent-hover);
+      box-shadow: var(--shadow-glow-orange);
+      transform: translateY(-1px);
+    }
+    .ds-button--primary:active { transform: translateY(0); }
+    .ds-button--primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .ds-button--blue {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: var(--radius-full);
+    }
+    .ds-button--blue:hover {
+      background: var(--color-primary-hover);
+      box-shadow: var(--shadow-glow-blue);
+      transform: translateY(-1px);
+    }
+
+    .ds-button--secondary {
+      background: transparent;
+      color: var(--color-primary);
+      border: 1px solid var(--color-border-primary);
+      padding: 13px 30px;
+      border-radius: var(--radius-full);
+    }
+    .ds-button--secondary:hover {
+      background: var(--color-primary-subtle);
+      border-color: var(--color-primary);
+    }
+
+    .ds-button--outline-accent {
+      background: transparent;
+      color: var(--color-accent);
+      border: 1px solid var(--color-border-accent);
+      padding: 13px 30px;
+      border-radius: var(--radius-full);
+    }
+    .ds-button--outline-accent:hover {
+      background: var(--color-accent-subtle);
+      border-color: var(--color-accent);
+    }
+
+    .ds-button--ghost {
+      background: transparent;
+      color: var(--color-text-secondary);
+      padding: 13px 20px;
+      border-radius: var(--radius-full);
+    }
+    .ds-button--ghost:hover { color: var(--color-text-primary); background: rgba(255,255,255,0.05); }
+
+    .ds-button--sm { font-size: var(--font-size-sm); padding: 8px 20px; }
+    .ds-button--lg { font-size: var(--font-size-lg); padding: 18px 40px; }
+
+    .ds-button--icon {
+      width: 44px; height: 44px; padding: 0;
+      border-radius: var(--radius-full);
+      background: var(--color-accent);
+      color: #fff; font-size: 18px;
+    }
+    .ds-button--icon:hover { background: var(--color-accent-hover); transform: scale(1.05); }
+
+    .ds-button--icon-outline {
+      width: 44px; height: 44px; padding: 0;
+      border-radius: var(--radius-full);
+      background: transparent; color: var(--color-primary);
+      border: 1px solid var(--color-border-primary);
+      font-size: 18px;
+    }
+    .ds-button--icon-outline:hover { background: var(--color-primary-subtle); }
+
+    /* ══════════════════════════════════════════
+       BADGES / TAGS
+    ══════════════════════════════════════════ */
+    .ds-badge {
+      display: inline-flex; align-items: center; gap: var(--spacing-1);
+      padding: 4px 12px; border-radius: var(--radius-full);
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wide); text-transform: uppercase;
+    }
+    .ds-badge--accent {
+      background: var(--color-accent-subtle);
+      border: 1px solid var(--color-border-accent);
+      color: var(--color-accent);
+    }
+    .ds-badge--primary {
+      background: var(--color-primary-subtle);
+      border: 1px solid var(--color-border-primary);
+      color: var(--color-primary);
+    }
+    .ds-badge--success {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #22C55E;
+    }
+    .ds-badge--neutral {
+      background: rgba(148,163,184,0.08);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    /* ══════════════════════════════════════════
+       CARDS
+    ══════════════════════════════════════════ */
+    .ds-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--card-padding);
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition-base);
+    }
+    .ds-card:hover {
+      border-color: var(--color-border-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .ds-card--glass {
+      background: rgba(16, 23, 41, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-2xl);
+      padding: var(--card-padding);
+    }
+
+    .ds-card--feature {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-6);
+      transition: all var(--transition-base);
+      position: relative; overflow: hidden;
+    }
+    .ds-card--feature::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: var(--gradient-orange-blue); opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+    .ds-card--feature:hover::before { opacity: 1; }
+    .ds-card--feature:hover {
+      border-color: var(--color-border-hover);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .ds-card--accent {
+      background: linear-gradient(145deg, rgba(249,115,22,0.08) 0%, rgba(10,15,35,0.98) 100%);
+      border: 1px solid var(--color-border-accent);
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-6);
+    }
+
+    .ds-card__icon {
+      width: 48px; height: 48px; border-radius: var(--radius-xl);
+      background: var(--color-accent-subtle); border: 1px solid var(--color-border-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: var(--spacing-4);
+    }
+    .ds-card__icon--blue {
+      background: var(--color-primary-subtle);
+      border-color: var(--color-border-primary);
+    }
+    .ds-card__title {
+      font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-2);
+    }
+    .ds-card__body {
+      font-size: var(--font-size-base); color: var(--color-text-secondary);
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* ══════════════════════════════════════════
+       NAVIGATION
+    ══════════════════════════════════════════ */
+    .ds-navbar {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+      background: var(--color-bg-nav);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 0 var(--spacing-6);
+      box-shadow: var(--shadow-nav);
+      backdrop-filter: blur(12px);
+    }
+    .ds-navbar__logo {
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);
+      background: var(--gradient-orange-blue);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .ds-navbar__links {
+      display: flex; gap: var(--spacing-6); list-style: none;
+    }
+    .ds-navbar__links a {
+      color: var(--color-text-secondary); text-decoration: none;
+      font-size: var(--font-size-base); font-weight: var(--font-weight-medium);
+      transition: color var(--transition-fast);
+    }
+    .ds-navbar__links a:hover, .ds-navbar__links a.active { color: var(--color-text-primary); }
+    .ds-navbar__links a.active { color: var(--color-accent); }
+    .ds-navbar__actions { display: flex; gap: var(--spacing-3); }
+
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
+    .ds-hero {
+      background: var(--gradient-hero);
+      border-radius: var(--radius-3xl);
+      padding: clamp(64px, 10vw, 120px) var(--spacing-12);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .ds-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--gradient-glow-orange);
+      pointer-events: none;
+    }
+    .ds-hero::after {
+      content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .ds-hero__eyebrow {
+      display: inline-flex; align-items: center; gap: var(--spacing-2);
+      background: var(--color-accent-subtle);
+      border: 1px solid var(--color-border-accent);
+      color: var(--color-accent);
+      padding: 6px 16px; border-radius: var(--radius-full);
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wider); text-transform: uppercase;
+      margin-bottom: var(--spacing-6);
+    }
+    .ds-hero__title {
+      font-family: var(--font-family-display);
+      font-size: clamp(var(--font-size-5xl), 8vw, var(--font-size-7xl));
+      font-weight: var(--font-weight-black);
+      letter-spacing: var(--letter-spacing-tight);
+      line-height: var(--line-height-tight);
+      margin-bottom: var(--spacing-6);
+    }
+    .ds-hero__title .highlight {
+      background: var(--gradient-text-brand);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .ds-hero__subtitle {
+      font-size: var(--font-size-xl); color: var(--color-text-secondary);
+      max-width: 560px; margin: 0 auto var(--spacing-10);
+      line-height: var(--line-height-relaxed);
+    }
+    .ds-hero__actions { display: flex; gap: var(--spacing-4); justify-content: center; flex-wrap: wrap; }
+
+    /* ══════════════════════════════════════════
+       INPUTS
+    ══════════════════════════════════════════ */
+    .ds-input, .ds-textarea, .ds-select {
+      display: block; width: 100%; max-width: 320px;
+      padding: var(--input-padding);
+      font-size: var(--font-size-base);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--input-radius);
+      color: var(--color-text-primary);
+      font-family: inherit;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      outline: none;
+    }
+    .ds-input::placeholder { color: var(--input-placeholder); }
+    .ds-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-subtle);
+    }
+    .ds-input--error {
+      border-color: var(--color-error);
+    }
+    .ds-input--error:focus {
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
+    }
+    .ds-textarea { min-height: 100px; resize: vertical; }
+    .ds-select { appearance: none; cursor: pointer; }
+
+    /* ══════════════════════════════════════════
+       FEATURE GRID
+    ══════════════════════════════════════════ */
+    .ds-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--spacing-6);
+    }
+
+    /* ══════════════════════════════════════════
+       STAT CARD
+    ══════════════════════════════════════════ */
+    .ds-stat {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-6);
+      text-align: center;
+    }
+    .ds-stat__value {
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-5xl);
+      font-weight: var(--font-weight-black);
+      letter-spacing: var(--letter-spacing-tight);
+      background: var(--gradient-orange-blue);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin-bottom: var(--spacing-2);
+    }
+    .ds-stat__label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* ══════════════════════════════════════════
+       TESTIMONIAL
+    ══════════════════════════════════════════ */
+    .ds-testimonial {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-6);
+    }
+    .ds-testimonial__text {
+      font-size: var(--font-size-base);
+      color: var(--color-text-secondary);
+      line-height: var(--line-height-relaxed);
+      margin-bottom: var(--spacing-6);
+      font-style: italic;
+    }
+    .ds-testimonial__author {
+      display: flex; align-items: center; gap: var(--spacing-3);
+    }
+    .ds-testimonial__avatar {
+      width: 40px; height: 40px; border-radius: var(--radius-full);
+      background: var(--gradient-orange-blue);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);
+      color: white;
+    }
+    .ds-testimonial__name {
+      font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold);
+    }
+    .ds-testimonial__role {
+      font-size: var(--font-size-xs); color: var(--color-text-muted);
+    }
+
+    /* ══════════════════════════════════════════
+       SECTION DEMO
+    ══════════════════════════════════════════ */
+    .ds-section {
+      padding: clamp(64px, 10vw, 120px) 0;
+    }
+    .ds-section--alt { background: var(--color-bg-surface); border-radius: var(--radius-3xl); padding: 64px; margin: 0 0 var(--spacing-8); }
+    .ds-section__label {
+      display: inline-block;
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wider); text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--spacing-3);
+    }
+    .ds-section__heading {
+      font-family: var(--font-family-display);
+      font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-tight);
+      line-height: var(--line-height-snug);
+      margin-bottom: var(--spacing-4);
+    }
+    .ds-section__body {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+      max-width: 540px;
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    .ds-footer {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-10) var(--spacing-8);
+    }
+    .ds-footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--spacing-8);
+      margin-bottom: var(--spacing-8);
+    }
+    .ds-footer__brand .ds-navbar__logo { font-size: var(--font-size-2xl); margin-bottom: var(--spacing-3); display: block; }
+    .ds-footer__tagline { font-size: var(--font-size-base); color: var(--color-text-secondary); margin-bottom: var(--spacing-5); }
+    .ds-footer__col-title { font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); color: var(--color-text-muted); margin-bottom: var(--spacing-4); }
+    .ds-footer__links { list-style: none; display: flex; flex-direction: column; gap: var(--spacing-3); }
+    .ds-footer__links a { color: var(--color-text-secondary); text-decoration: none; font-size: var(--font-size-base); transition: color var(--transition-fast); }
+    .ds-footer__links a:hover { color: var(--color-accent); }
+    .ds-footer__bottom { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: var(--spacing-6); flex-wrap: wrap; gap: var(--spacing-4); }
+    .ds-footer__copyright { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+
+    /* ══════════════════════════════════════════
+       VISUAL EFFECTS
+    ══════════════════════════════════════════ */
+    .ds-glow-line {
+      height: 1px;
+      background: var(--gradient-orange-blue);
+      border-radius: var(--radius-full);
+      margin-bottom: var(--spacing-8);
+    }
+    .ds-dot-grid {
+      background-image: radial-gradient(circle, rgba(148,163,184,0.1) 1px, transparent 1px);
+      background-size: 24px 24px;
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-8);
+    }
+
+    /* ── Responsive helper ── */
+    @media (max-width: 768px) {
+      .ds-footer__grid { grid-template-columns: 1fr 1fr; }
+      .ds-navbar__links { display: none; }
+      .page-wrap { padding: var(--spacing-4); }
+    }
+    @media (max-width: 480px) {
+      .ds-footer__grid { grid-template-columns: 1fr; }
+      .ds-hero { padding: var(--spacing-10) var(--spacing-6); }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <nav class="ds-nav-top">
+    <a href="style-guide.html">🎨 Style Guide</a>
+    <a href="components.html">🧩 Components</a>
+  </nav>
+
+  <div style="margin-bottom:var(--spacing-4);">
+    <div style="font-family:var(--font-family-display);font-size:var(--font-size-4xl);font-weight:var(--font-weight-black);letter-spacing:var(--letter-spacing-tight);">Component Library</div>
+    <div style="color:var(--color-text-secondary);font-size:var(--font-size-lg);margin-top:var(--spacing-2);">AI Powered Design System · Dark Theme · screenshot source</div>
+    <div class="ds-glow-line" style="margin-top:var(--spacing-6);"></div>
+  </div>
+
+
+  <!-- ══════════════ BUTTONS ══════════════ -->
+  <section id="buttons">
+    <div class="section-title">🔘 Buttons</div>
+    <div class="section-sub">Primary, secondary, ghost, icon, and size variants</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Primary · CTA · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="component-row">
+      <button class="ds-button ds-button--primary">Get Started</button>
+      <button class="ds-button ds-button--primary ds-button--sm">Get Started</button>
+      <button class="ds-button ds-button--primary ds-button--lg">Get Started →</button>
+      <button class="ds-button ds-button--primary" disabled>Disabled</button>
+    </div>
+
+    <div class="component-label">Blue Primary · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="component-row">
+      <button class="ds-button ds-button--blue">Learn More</button>
+      <button class="ds-button ds-button--blue ds-button--sm">Learn More</button>
+      <button class="ds-button ds-button--blue ds-button--lg">Learn More →</button>
+    </div>
+
+    <div class="component-label">Secondary / Outline · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="component-row">
+      <button class="ds-button ds-button--secondary">View Docs</button>
+      <button class="ds-button ds-button--outline-accent">View Demo</button>
+      <button class="ds-button ds-button--ghost">Learn More</button>
+    </div>
+
+    <div class="component-label">Icon Buttons · <span class="source-tag source-tag--inferred">inferred</span></div>
+    <div class="component-row">
+      <button class="ds-button ds-button--icon">⚡</button>
+      <button class="ds-button ds-button--icon" style="background:var(--color-primary);">→</button>
+      <button class="ds-button ds-button--icon-outline">✦</button>
+      <button class="ds-button ds-button--icon-outline" style="border-color:var(--color-border-accent);color:var(--color-accent);">⚙</button>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ BADGES ══════════════ -->
+  <section id="badges">
+    <div class="section-title">🏷 Badges &amp; Tags</div>
+    <div class="section-sub">Semantic status indicators and labels</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Variants · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="component-row">
+      <span class="ds-badge ds-badge--accent">⚡ AI Powered</span>
+      <span class="ds-badge ds-badge--primary">🔷 New</span>
+      <span class="ds-badge ds-badge--success">✓ Live</span>
+      <span class="ds-badge ds-badge--neutral">Beta</span>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ CARDS ══════════════ -->
+  <section id="cards">
+    <div class="section-title">🃏 Cards</div>
+    <div class="section-sub">Feature cards, glass cards, accent cards</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Standard Cards · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--spacing-6);margin-bottom:var(--spacing-8);">
+      <div class="ds-card">
+        <div class="ds-card__icon">⚡</div>
+        <div class="ds-card__title">AI Acceleration</div>
+        <div class="ds-card__body">Supercharge your workflow with intelligent automation and real-time AI suggestions.</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card__icon ds-card__icon--blue">🔷</div>
+        <div class="ds-card__title">Smart Analytics</div>
+        <div class="ds-card__body">Get deep insights into your data with powerful visualization and AI-driven analysis.</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card__icon">🌐</div>
+        <div class="ds-card__title">Global Scale</div>
+        <div class="ds-card__body">Deploy worldwide across 50+ regions with enterprise-grade reliability and security.</div>
+      </div>
+    </div>
+
+    <div class="component-label">Feature Card (with hover gradient) · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--spacing-6);margin-bottom:var(--spacing-8);">
+      <div class="ds-card--feature">
+        <div class="ds-card__icon">🚀</div>
+        <div class="ds-card__title">Launch Faster</div>
+        <div class="ds-card__body">From idea to production in minutes, not months.</div>
+      </div>
+      <div class="ds-card--feature">
+        <div class="ds-card__icon ds-card__icon--blue">🛡</div>
+        <div class="ds-card__title">Enterprise Security</div>
+        <div class="ds-card__body">SOC2-compliant infrastructure with end-to-end encryption.</div>
+      </div>
+      <div class="ds-card--feature">
+        <div class="ds-card__icon">📈</div>
+        <div class="ds-card__title">Auto-Scale</div>
+        <div class="ds-card__body">Handle millions of requests without any manual intervention.</div>
+      </div>
+    </div>
+
+    <div class="component-label">Glassmorphism Card · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div style="background:var(--gradient-hero);border-radius:var(--radius-2xl);padding:var(--spacing-8);margin-bottom:var(--spacing-8);position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle, rgba(249,115,22,0.2) 0%, transparent 70%);pointer-events:none;"></div>
+      <div style="max-width:400px;" class="ds-card--glass">
+        <div class="ds-badge ds-badge--accent" style="margin-bottom:var(--spacing-4);">⚡ AI Powered</div>
+        <div class="ds-card__title" style="font-size:var(--font-size-2xl);margin-bottom:var(--spacing-3);">Build the future</div>
+        <div class="ds-card__body" style="margin-bottom:var(--spacing-5);">The most powerful AI platform for developers and enterprises alike.</div>
+        <div style="display:flex;gap:var(--spacing-3);">
+          <button class="ds-button ds-button--primary">Start Free</button>
+          <button class="ds-button ds-button--secondary">Learn More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="component-label">Stat Cards · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--spacing-4);margin-bottom:var(--spacing-8);">
+      <div class="ds-stat"><div class="ds-stat__value">10M+</div><div class="ds-stat__label">Active Users</div></div>
+      <div class="ds-stat"><div class="ds-stat__value">99.9%</div><div class="ds-stat__label">Uptime SLA</div></div>
+      <div class="ds-stat"><div class="ds-stat__value">50+</div><div class="ds-stat__label">Regions</div></div>
+      <div class="ds-stat"><div class="ds-stat__value">2ms</div><div class="ds-stat__label">Avg Latency</div></div>
+    </div>
+
+    <div class="component-label">Accent Card · <span class="source-tag source-tag--inferred">inferred</span></div>
+    <div style="max-width:400px;margin-bottom:var(--spacing-8);">
+      <div class="ds-card--accent">
+        <div class="ds-badge ds-badge--accent" style="margin-bottom:var(--spacing-4);">🔥 Hot</div>
+        <div class="ds-card__title" style="margin-bottom:var(--spacing-2);">Enterprise Plan</div>
+        <div class="ds-card__body">Unlimited AI requests, custom models, and dedicated support.</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ NAVIGATION ══════════════ -->
+  <section id="navigation">
+    <div class="section-title">🧭 Navigation</div>
+    <div class="section-sub">Top navigation bar with logo, links, and CTA</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Desktop Navbar · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div style="margin-bottom:var(--spacing-8);">
+      <nav class="ds-navbar">
+        <span class="ds-navbar__logo">⚡ AIPower</span>
+        <ul class="ds-navbar__links">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Docs</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+        <div class="ds-navbar__actions">
+          <button class="ds-button ds-button--ghost ds-button--sm">Log in</button>
+          <button class="ds-button ds-button--primary ds-button--sm">Get Started</button>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <section id="hero">
+    <div class="section-title">🦸 Hero Section</div>
+    <div class="section-sub">Full hero with eyebrow, headline, subtitle, and CTA row</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Hero Component · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="ds-hero" style="margin-bottom:var(--spacing-8);">
+      <div class="ds-hero__eyebrow">⚡ AI Powered Platform</div>
+      <h1 class="ds-hero__title">
+        Automate Your AI<br>
+        <span class="highlight">All Agents.</span>
+      </h1>
+      <p class="ds-hero__subtitle">The most powerful platform to build, deploy, and scale AI agents — in minutes, not months.</p>
+      <div class="ds-hero__actions">
+        <button class="ds-button ds-button--primary ds-button--lg">Get Started Free →</button>
+        <button class="ds-button ds-button--secondary ds-button--lg">View Demo</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ SECTIONS ══════════════ -->
+  <section id="sections">
+    <div class="section-title">📐 Page Sections</div>
+    <div class="section-sub">Section heading + body + CTA layout patterns</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Feature Section · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="ds-section--alt" style="margin-bottom:var(--spacing-8);">
+      <div class="ds-section__label">Why AI Powered</div>
+      <div class="ds-section__heading">Build smarter,<br>ship faster</div>
+      <div class="ds-section__body" style="margin-bottom:var(--spacing-8);">Everything you need to build production AI applications at scale, with zero infrastructure headaches.</div>
+      <div class="ds-feature-grid">
+        <div class="ds-card--feature" style="padding:var(--spacing-5);">
+          <div class="ds-card__icon" style="width:40px;height:40px;font-size:18px;margin-bottom:var(--spacing-3);">⚡</div>
+          <div class="ds-card__title" style="font-size:var(--font-size-base);margin-bottom:var(--spacing-2);">Instant Deploy</div>
+          <div class="ds-card__body" style="font-size:var(--font-size-sm);">One-click deployment to global edge.</div>
+        </div>
+        <div class="ds-card--feature" style="padding:var(--spacing-5);">
+          <div class="ds-card__icon ds-card__icon--blue" style="width:40px;height:40px;font-size:18px;margin-bottom:var(--spacing-3);">🔗</div>
+          <div class="ds-card__title" style="font-size:var(--font-size-base);margin-bottom:var(--spacing-2);">API-First</div>
+          <div class="ds-card__body" style="font-size:var(--font-size-sm);">Every feature exposed via REST &amp; GraphQL.</div>
+        </div>
+        <div class="ds-card--feature" style="padding:var(--spacing-5);">
+          <div class="ds-card__icon" style="width:40px;height:40px;font-size:18px;margin-bottom:var(--spacing-3);">🧠</div>
+          <div class="ds-card__title" style="font-size:var(--font-size-base);margin-bottom:var(--spacing-2);">Smart Routing</div>
+          <div class="ds-card__body" style="font-size:var(--font-size-sm);">Intelligent load balancing across models.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ INPUTS ══════════════ -->
+  <section id="inputs">
+    <div class="section-title">📝 Form Inputs</div>
+    <div class="section-sub">Text field, textarea, select, error state</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Input States · <span class="source-tag source-tag--inferred">inferred</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--spacing-4);margin-bottom:var(--spacing-8);">
+      <div>
+        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:var(--spacing-2);">Default</div>
+        <input class="ds-input" placeholder="Enter your email…" type="email">
+      </div>
+      <div>
+        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:var(--spacing-2);">Error State</div>
+        <input class="ds-input ds-input--error" value="invalid@" type="email">
+      </div>
+      <div>
+        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:var(--spacing-2);">Textarea</div>
+        <textarea class="ds-textarea ds-input" placeholder="Your message…" style="max-width:320px;"></textarea>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ TESTIMONIAL ══════════════ -->
+  <section id="testimonials">
+    <div class="section-title">💬 Testimonials</div>
+    <div class="section-sub">User quote cards</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Testimonial Card · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--spacing-6);margin-bottom:var(--spacing-8);">
+      <div class="ds-testimonial">
+        <div class="ds-testimonial__text">"AI Powered completely transformed our development process. We ship 10x faster now."</div>
+        <div class="ds-testimonial__author">
+          <div class="ds-testimonial__avatar">JS</div>
+          <div>
+            <div class="ds-testimonial__name">Jane Smith</div>
+            <div class="ds-testimonial__role">CTO at TechCorp</div>
+          </div>
+        </div>
+      </div>
+      <div class="ds-testimonial">
+        <div class="ds-testimonial__text">"The best AI infrastructure platform I've used. The developer experience is unmatched."</div>
+        <div class="ds-testimonial__author">
+          <div class="ds-testimonial__avatar" style="background:var(--gradient-blue);">MK</div>
+          <div>
+            <div class="ds-testimonial__name">Mike Kumar</div>
+            <div class="ds-testimonial__role">Lead Engineer at StartupAI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ VISUAL EFFECTS ══════════════ -->
+  <section id="effects">
+    <div class="section-title">✨ Visual Effects</div>
+    <div class="section-sub">Glow lines, dot grids, gradient overlays</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Glow Line · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="ds-glow-line" style="margin-bottom:var(--spacing-6);"></div>
+
+    <div class="component-label">Dot Grid Background · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div class="ds-dot-grid" style="margin-bottom:var(--spacing-6);min-height:120px;display:flex;align-items:center;justify-content:center;color:var(--color-text-secondary);">
+      Content on dot grid background
+    </div>
+
+    <div class="component-label">Orange Glow Overlay · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <div style="position:relative;background:var(--color-bg-surface);border-radius:var(--radius-2xl);padding:var(--spacing-8);overflow:hidden;margin-bottom:var(--spacing-6);min-height:120px;display:flex;align-items:center;justify-content:center;">
+      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:400px;height:200px;background:var(--gradient-glow-orange);pointer-events:none;"></div>
+      <span style="color:var(--color-text-secondary);position:relative;">Orange glow radial gradient at bottom</span>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <section id="footer">
+    <div class="section-title">📋 Footer</div>
+    <div class="section-sub">Multi-column footer with brand, links, and copyright</div>
+    <div class="section-divider"></div>
+
+    <div class="component-label">Footer · <span class="source-tag source-tag--screenshot">screenshot</span></div>
+    <footer class="ds-footer">
+      <div class="ds-footer__grid">
+        <div class="ds-footer__brand">
+          <span class="ds-navbar__logo">⚡ AIPower</span>
+          <p class="ds-footer__tagline">The most powerful AI platform for building intelligent applications at scale.</p>
+          <div style="display:flex;gap:var(--spacing-3);">
+            <button class="ds-button ds-button--icon-outline" style="width:36px;height:36px;font-size:14px;">𝕏</button>
+            <button class="ds-button ds-button--icon-outline" style="width:36px;height:36px;font-size:14px;">in</button>
+            <button class="ds-button ds-button--icon-outline" style="width:36px;height:36px;font-size:14px;">gh</button>
+          </div>
+        </div>
+        <div>
+          <div class="ds-footer__col-title">Product</div>
+          <ul class="ds-footer__links">
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Roadmap</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ds-footer__col-title">Developers</div>
+          <ul class="ds-footer__links">
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">SDKs</a></li>
+            <li><a href="#">Status</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ds-footer__col-title">Company</div>
+          <ul class="ds-footer__links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-footer__bottom">
+        <span class="ds-footer__copyright">© 2025 AIPower Inc. All rights reserved.</span>
+        <div style="display:flex;gap:var(--spacing-4);">
+          <a href="#" style="color:var(--color-text-muted);font-size:var(--font-size-sm);text-decoration:none;">Privacy</a>
+          <a href="#" style="color:var(--color-text-muted);font-size:var(--font-size-sm);text-decoration:none;">Terms</a>
+          <a href="#" style="color:var(--color-text-muted);font-size:var(--font-size-sm);text-decoration:none;">Cookies</a>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+
+  <!-- ══════════════ RESPONSIVE ══════════════ -->
+  <section id="responsive">
+    <div class="section-title">📱 Responsive Rules</div>
+    <div class="section-sub">Breakpoint system and responsive behaviour</div>
+    <div class="section-divider"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--spacing-4);">
+      <div class="ds-card" style="padding:var(--spacing-5);">
+        <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent);margin-bottom:var(--spacing-2);">480px</div>
+        <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Mobile: single column, nav hidden, full-width CTAs</div>
+      </div>
+      <div class="ds-card" style="padding:var(--spacing-5);">
+        <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent);margin-bottom:var(--spacing-2);">768px</div>
+        <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Tablet: 2-col grid, hamburger nav, compact hero</div>
+      </div>
+      <div class="ds-card" style="padding:var(--spacing-5);">
+        <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent);margin-bottom:var(--spacing-2);">1024px</div>
+        <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Desktop: full nav, 3-col grids, side-by-side layouts</div>
+      </div>
+      <div class="ds-card" style="padding:var(--spacing-5);">
+        <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent);margin-bottom:var(--spacing-2);">1280px</div>
+        <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Wide: max container width, 4-col feature grids</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
