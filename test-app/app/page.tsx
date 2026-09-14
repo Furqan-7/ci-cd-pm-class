@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Navbar from "../components/Navbar";
 import HeroBanner from "../components/HeroBanner";
 import AnimeCard from "../components/AnimeCard";
@@ -12,21 +12,16 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"all" | "watchlist">("all");
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
-  const [watchlist, setWatchlist] = useState<string[]>([]);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-
-  // Load watchlist from localStorage
-  useEffect(() => {
+  const [watchlist, setWatchlist] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem("anime_watchlist");
-      if (saved) {
-        setWatchlist(JSON.parse(saved));
-      }
+      if (saved) return JSON.parse(saved) as string[];
     } catch {
       // Ignore localStorage errors
     }
-    setIsLoaded(true);
-  }, []);
+    return [];
+  });
+  const [isLoaded] = useState<boolean>(true);
 
   // Save watchlist to localStorage
   const handleToggleWatchlist = (id: string) => {
