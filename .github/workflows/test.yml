@@ -56,5 +56,13 @@ jobs:
           username: ${{ secrets.AWS_USER }}
           key: ${{ secrets.AWS_SSH_KEY }}
           port: ${{ secrets.AWS_PORT }}
+
           script: |
-            echo "Connected to AWS successfully"
+            cd ~/test-app
+            git pull origin main
+
+            cd ~/test-app/test-app
+            npm ci
+            npm run build
+
+            pm2 restart next-app
